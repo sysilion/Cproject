@@ -13,3 +13,8 @@ input Array size (exponentiation of 2) : 20
 ********** Calc Time = 0.002079ms
 
 ********** Calc Time = 0.001848ms
+
+
+# Randmize Factor (main.c)
+
+# Time Check Define (search.h)
