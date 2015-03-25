@@ -5,39 +5,41 @@
  *      Author: Administrator
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
+#include "search.h"
 
 void linear1() {
-	int *input;
-	int result, i, size, search_data;
+	extern int *input;
+	int result, i, search_data;
 
-	printf("input Array size (exponentiation of 2) :");
-	scanf("%d", &size);
+	// input array size
+	extern int data_size;
+	// random data set variable
+	extern double factor;
 
-	input = (int *)malloc(sizeof(int) * (int)pow(2,size));
+	// time check variable
+	float Time = 0;
+	BOOL err;
 
-	for (i = 0; i < (int)pow(2,size); i++){
-		input[i] = i+1;
+	CHECK_TIME_START;
+
+	for (i = 0; i < LOOP_COUNT; i++){
+		search_data = (int)(rand()*factor)%data_size + 1;
+
+		result = Linear_Search(input, 0, data_size, search_data);
+
+		if(i%(LOOP_COUNT/10) == 0) printf("*", result);
+//		printf("Search Complete --> input[%d] : %d\n", result, search_data);
+
 	}
 
-	// Randomize data %(int)pow(2,size)+1 ( 1~2^arraysize )
-	srand(time(NULL));
-	search_data = rand()%(int)pow(2,size) + 1;
+	CHECK_TIME_END(Time, err);
 
-	result = Linear_Search(input, 0, sizeof(input)/4, search_data);
-
-	printf("Search Complete --> input[%d] : %d", result, search_data);
+	printf(" Calc Time = %.6fms\n", Time/LOOP_COUNT);
 
 }
 
 int Linear_Search(int array[], int low, int high, int data) {
-
 	if (low >= high) { return -1; }
 	else if (array[low] == data){ return low; }
 	else { return Linear_Search(array, low+1, high, data); }
-
 }

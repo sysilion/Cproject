@@ -4,58 +4,49 @@
  *  Created on: 2015. 3. 19.
  *      Author: Administrator
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-#include <windows.h>
 
-#define CHECK_TIME_START __int64 freq, start, end; if (QueryPerformanceFrequency((LARGE_INTEGER*)&freq)) {QueryPerformanceCounter((LARGE_INTEGER*)&start);
-#define CHECK_TIME_END(a,b) QueryPerformanceCounter((LARGE_INTEGER*)&end); a=(float)((double)(end - start)/freq*1000); b=TRUE; } else b=FALSE;
+#include "search.h"
 
 void jump(){
-	int *input;
-	int i, size, search_data, index = 0;
-	double factor, max, min = 0.0;
+	extern int *input;
+	int i, x, search_data, index = 0;
 
-	float Time;
+	// input array size
+	extern int data_size;
+	double sqrt_data_size = sqrt(data_size);
+	// random data set variable
+	extern double factor;
+
+	// time check variable
+	float Time = 0;
 	BOOL err;
-
-	printf("input Array size (exponentiation of 2) : ");
-	scanf("%d", &size);
-
-	input = (int *)malloc(sizeof(int) * (int)pow(2,size));
-
-	for (i = 0; i < (int)pow(2,size); i++){
-		input[i] = i+1;
-	}
-
-	// Randomize data (int)(rand()*factor)%(int)pow(2,size)+1 ( 1~2^arraysize )
-	max = pow(2, size); // set rand max size
-	factor = (max - min) / RAND_MAX; // set rand max factor
-	srand(time(NULL));
-	search_data = (int)(rand()*factor)%(int)pow(2,size) + 1;
 
 	// increse rand max number. using factor!!
 
 	CHECK_TIME_START;
 
-	for (i = 0; i < sqrt((int)pow(2,size)); i++) {
-		if(search_data <= i*sqrt((int)pow(2,size))) {
-			index = --i*sqrt((int)pow(2,size));
-			break;
-		}
-	}
+	for (x = 0; x < LOOP_COUNT; x++){
+		search_data = (int)(rand()*factor)%data_size + 1;
 
-	for (i = index; i < (int)pow(2,size); i++){
-		if (search_data == input[i]) {
-			printf("Search Complete --> input[%d] : %d", i, search_data);
-			break;
+		for (i = 0; i < sqrt_data_size; i++) {
+			if(search_data <= i * sqrt_data_size) {
+				index = --i * sqrt_data_size;
+				break;
+			}
 		}
+
+		for (i = index; i < data_size; i++){
+			if (search_data == input[i]) {
+				if(x%(LOOP_COUNT/10) == 0) printf("*");
+//				printf("Search Complete --> input[%d] : %d\n", i, search_data);
+				break;
+			}
+		}
+
 	}
 
 	CHECK_TIME_END(Time, err);
 
-	printf("\n Calc Time = %.6fms", Time);
+	printf(" Calc Time = %.6fms\n", Time/LOOP_COUNT);
 
 }

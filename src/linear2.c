@@ -4,32 +4,38 @@
  *  Created on: 2015. 3. 19.
  *      Author: Administrator
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
+
+#include "search.h"
 
 void linear2() {
-	int *input;
-	int i, size, search_data;
+	extern int *input;
+	int i, x, search_data;
 
-	printf("input Array size (exponentiation of 2) :");
-	scanf("%d", &size);
+	// random data set variable
+	extern double factor;
 
-	input = (int *)malloc(sizeof(int) * (int)pow(2,size));
+	// array size variable
+	extern int data_size;
 
-	for (i = 0; i < (int)pow(2,size); i++){
-		input[i] = i+1;
-	}
+	// time check variable
+	float Time = 0;
+	BOOL err;
 
-	// Randomize data %(int)pow(2,size)+1 ( 1~2^arraysize )
-	srand(time(NULL));
-	search_data = rand()%(int)pow(2,size) + 1;
+	CHECK_TIME_START;
 
-	for (i = 0; i < (int)pow(2,size); i++){
-		if (search_data == input[i]) {
-			printf("Search Complete --> input[%d] : %d", i, search_data);
-			break;
+	for (x = 0; x < LOOP_COUNT; x++){
+		search_data = (int)(rand()*factor)%data_size + 1;
+
+		for (i = 0; i < data_size; i++){
+			if (search_data == input[i]) {
+				if(x%(LOOP_COUNT/10) == 0) printf("*");
+//				printf("Search Complete --> input[%d] : %d\n", i, search_data);
+				break;
+			}
 		}
 	}
+
+	CHECK_TIME_END(Time, err);
+
+	printf(" Calc Time = %.6fms\n", Time/LOOP_COUNT);
 }
